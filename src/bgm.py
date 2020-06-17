@@ -21,7 +21,7 @@ data = np.floor(vol*amp*np.sin(2.*np.pi*fsine*t))
 data = np.asarray(data, dtype=np.int16)
 scipy.io.wavfile.write('/tmp/' + filename + 'a.wav',fsamp,data)
 
-vol = 0.2
+vol = 1.0
 data = np.floor(vol*amp*np.sin(2.*np.pi*fsine*t))
 data = np.asarray(data, dtype=np.int16)
 scipy.io.wavfile.write('/tmp/' + filename + 'b.wav',fsamp,data)

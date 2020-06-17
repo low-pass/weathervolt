@@ -2,7 +2,6 @@
 THISDIR=$( cd `dirname $0` && pwd )
 SRCDIR=${THISDIR}/src
 INSTALLDIR=${THISDIR}/install
-LOGFILE=/tmp/weathervolt.log
 
 if [ -f ${THISDIR}/owm.key ] 
 then :
@@ -13,22 +12,20 @@ fi
 
 mkdir -p ${INSTALLDIR}
 
-chmod +x ${INSTALLDIR}/pip3.userinstall.sh
-
 CURRENTFILE=${INSTALLDIR}/weathervolt.service
 echo "Generating ${CURRENTFILE}"
 cat << EOF > ${CURRENTFILE}
 [Unit]
-Description=Periocic OWM forecast fetch and generate parametric audio tone in background
+Description=Fetch OWM forecast periodically and generate parametric audio tone in background
 After=multi-user.target
 
 [Service]
 Type=idle
-Environment=HOME=/home/ikempi
+Environment=HOME=${HOME}
 Environment=DISPLAY=:0
 Environment=XDG_RUNTIME_DIR=/run/user/1000/
-ExecStart=/usr/bin/python3 ${SRCDIR}/bgm.py > ${LOGFILE} 2>&1
-User=ikempi
+ExecStart=/usr/bin/python3 ${SRCDIR}/bgm.py
+User=${USER}
 
 [Install]
 WantedBy=multi-user.target
@@ -37,7 +34,7 @@ EOF
 CURRENTFILE=${THISDIR}/Makefile
 echo "Generating ${CURRENTFILE}"
 cat << EOF > ${CURRENTFILE}
-.PHONY: run plot config install
+.PHONY: run plot config pip install uninstall
 all: run plot 
 run:
 	python3 ${SRCDIR}/bgm.py
@@ -48,7 +45,8 @@ config:
 pip:
 	pip3 install pyowm --user && \\
 	pip3 install pyyaml --user && \\
-	pip3 install numpy --user
+	pip3 install numpy --user && \\
+	pip3 install scipy --user
 install:
 	sudo cp ${INSTALLDIR}/weathervolt.service /lib/systemd/system/ && \\
 	sudo chmod 644 /lib/systemd/system/weathervolt.service && \\
