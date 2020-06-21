@@ -1,0 +1,32 @@
+from scipy.io import wavfile
+import matplotlib.pyplot as plt
+import numpy as np
+import yaml
+
+with open("wavecfg.yaml", 'r') as stream:
+    wavecfg = yaml.safe_load(stream)
+filename = wavecfg['filename']
+
+samplerate, dataa = wavfile.read('/tmp/' + filename + 'a.wav')
+samplerate, datab = wavfile.read('/tmp/' + filename + 'b.wav')
+
+length = dataa.shape[0] / samplerate
+time = np.linspace(0., length, dataa.shape[0])
+dataa=dataa/2**16
+datab=datab/2**16
+
+figure,axes = plt.subplots(2,1,sharex=True)
+axes[0].plot(time,dataa,label='Sequence A')
+axes[1].plot(time,datab,label='Sequence B')
+axes[0].set_ylabel('Sequence A')
+axes[1].set_ylabel('Sequence B')
+axes[1].set_xlabel('Time (s)')
+axes[0].set_ylim(-1,1)
+axes[1].set_ylim(-1,1)
+axes[0].grid(True)
+axes[1].grid(True)
+titlestr = "AC signal sequences" 
+plt.suptitle(titlestr,fontsize=20);
+plt.show(block=False);
+
+input()

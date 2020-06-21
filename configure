@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+THISDIR=$( cd `dirname $0` && pwd )
+
+if [ -f ${THISDIR}/owm.key ] 
+then :
+else 
+    echo "Error: OWM key file doesn't exist. Check README on how to obtain one. Aborting.." && \
+    exit 0
+fi
+
+CURRENTFILE=${THISDIR}/Makefile
+echo "Generating Makefile"
+
+cat << EOF > ${THISDIR}/Makefile
+
+.PHONY: run plot config install
+all: run plot 
+run:
+	python3 bgm.py
+plot:
+	python3 plot_wav.py
+config:
+	python3 wavecfg.py
+install:
+	./pip3.userinstall.sh
+EOF
+
+exit 0
