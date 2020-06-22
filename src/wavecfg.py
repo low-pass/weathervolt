@@ -1,5 +1,6 @@
 import io
 import yaml
+import os 
 
 try:
     fsine = input("Enter carrier frequency (Hz) [default = 100]:")
@@ -17,7 +18,7 @@ try:
 except ValueError:
     t_sec = 10
 
-filename = input("Input wav file name (saved in /tmp/) [default = weathertone]:")
+filename = input("Enter wav file name (saved in /tmp/) [default = weathertone]:")
 if filename == '':
     filename = "weathertone"
 
@@ -28,5 +29,6 @@ data = {
 'filename': str(filename)
 }
 
-with io.open('wavecfg.yaml', 'w', encoding='utf8') as outfile:
+dir_path = os.path.dirname(os.path.realpath(__file__))
+with io.open(dir_path + '/../wavecfg.yaml', 'w', encoding='utf8') as outfile:
     yaml.dump(data, outfile, default_flow_style=False, allow_unicode=True)

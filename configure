@@ -16,7 +16,7 @@ CURRENTFILE=${INSTALLDIR}/weathervolt.service
 echo "Generating ${CURRENTFILE}"
 cat << EOF > ${CURRENTFILE}
 [Unit]
-Description=Fetch OWM forecast periodically and generate parametric audio tone in background
+Description=fetch OWM forecast periodically and generate parametric audio tone in background
 After=multi-user.target
 
 [Service]
@@ -34,7 +34,7 @@ EOF
 CURRENTFILE=${THISDIR}/Makefile
 echo "Generating ${CURRENTFILE}"
 cat << EOF > ${CURRENTFILE}
-.PHONY: run plot config pip install uninstall
+.PHONY: run plot config pip install sstart sstop sstatus sjournal uninstall
 all: run plot 
 run:
 	python3 ${SRCDIR}/bgm.py
@@ -52,6 +52,14 @@ install:
 	sudo chmod 644 /lib/systemd/system/weathervolt.service && \\
 	sudo systemctl daemon-reload && \\
 	sudo systemctl enable weathervolt.service
+sstart:
+	sudo systemctl start weathervolt.service
+sstop:
+	sudo systemctl stop weathervolt.service
+sstatus:
+	sudo systemctl status weathervolt
+sjournal:
+	sudo journalctl _SYSTEMD_UNIT=weathervolt.service
 uninstall:
 	sudo systemctl stop weathervolt.service && \\
 	sudo systemctl disable weathervolt.service && \\
