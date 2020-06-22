@@ -13,6 +13,7 @@ inet_fail = False
 while True:
     if not internet_on():
         if not inet_fail:
+            print('Internet is gone!')
             inet_fail = True
             wav_output(2,2,id_char)
             id_char = flip_id(id_char)
