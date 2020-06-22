@@ -1,5 +1,5 @@
 filename: weathertone
-fmod: 1
+fmod: 0.5
 fsamp: 44100
 fsine: 100
 fullsc: 30

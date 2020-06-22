@@ -13,10 +13,10 @@ try:
 except ValueError:
     fsamp = 44100
 try:
-    fmod = input("Enter modulation frequency (Hz) [default = 1]:")
-    fmod = int(fmod)
+    fmod = input("Enter modulation frequency (Hz) [default = 0.5]:")
+    fmod = float(fmod)
 except ValueError:
-    fmod = 1
+    fmod = 0.5
 try:
     fullsc = input("Enter voltmeter fullscale (units) [default = 30]:")
     fullsc = int(fullsc)
