@@ -24,7 +24,7 @@ Type=idle
 Environment=HOME=${HOME}
 Environment=DISPLAY=:0
 Environment=XDG_RUNTIME_DIR=/run/user/1000/
-ExecStart=/usr/bin/python3 ${SRCDIR}/bgm.py
+ExecStart=/usr/bin/python3 ${SRCDIR}/service.py
 User=${USER}
 
 [Install]
