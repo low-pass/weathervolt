@@ -11,6 +11,7 @@ fsamp = wavecfg['fsamp']
 fsine = wavecfg['fsine']
 t_sec = wavecfg['t_sec']
 filename = wavecfg['filename']
+
 t = np.linspace(0.,t_sec,fsamp*t_sec)
 amp = np.iinfo(np.int16).max
 vol = 0.5
@@ -24,13 +25,13 @@ data = np.asarray(data, dtype=np.int16)
 scipy.io.wavfile.write('/tmp/' + filename + 'b.wav',fsamp,data)
 
 mixer.init()
-mixer.music.load('/tmp/weathertonea.wav')
+mixer.music.load('/tmp/' + filename + 'a.wav')
 mixer.music.play(-1)
 
 time.sleep(2)
 print('foo')
 time.sleep(1)
 mixer.music.stop()
-mixer.music.load('/tmp/weathertoneb.wav')
+mixer.music.load('/tmp/' + filename + 'b.wav')
 mixer.music.play(-1)
 time.sleep(4)

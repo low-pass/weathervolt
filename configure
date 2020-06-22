@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 THISDIR=$( cd `dirname $0` && pwd )
+SRCDIR=${THISDIR}/src
 
-if [ -f ${THISDIR}/owm.key ] 
+if [ -f ${SRCDIR}/owm.key ] 
 then :
 else 
     echo "Error: OWM key file doesn't exist. Check README on how to obtain one. Aborting.." && \
@@ -16,11 +17,11 @@ cat << EOF > ${THISDIR}/Makefile
 .PHONY: run plot config install
 all: run plot 
 run:
-	python3 bgm.py
+	python3 ${SRCDIR}/bgm.py
 plot:
-	python3 plot_wav.py
+	python3 ${SRCDIR}/plot_wav.py
 config:
-	python3 wavecfg.py
+	python3 ${SRCDIR}/wavecfg.py
 install:
 	./pip3.userinstall.sh
 EOF
