@@ -21,9 +21,8 @@ def wav_output(highest,lowest,id_char):
     t_sec = wavecfg['t_sec']
     filename = wavecfg['filename']
     t = np.linspace(0.,t_sec,fsamp*t_sec)
-    vol = ((highest-lowest/2)+lowest)
-    mod_ampl = (highest/vol-lowest/vol)
-    print(mod_ampl)
+    vol = (highest-lowest)/2+lowest
+    mod_ampl = (highest-lowest)/vol/2
     amp = np.iinfo(np.int16).max
     carrier = vol*np.sin(2.*np.pi*fsine*t)/fullscale
     mod = mod_ampl*np.sin(2.*np.pi*fmod*t)+1

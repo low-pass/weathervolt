@@ -10,5 +10,5 @@ print(lowest)
 wav_output(highest,lowest,'a')
 time.sleep(6)
 
-wav_output(highest-2,lowest,'b')
+wav_output(highest-2,lowest+1,'b')
 time.sleep(6)
