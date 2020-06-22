@@ -24,8 +24,11 @@ Type=idle
 Environment=HOME=${HOME}
 Environment=DISPLAY=:0
 Environment=XDG_RUNTIME_DIR=/run/user/1000/
-ExecStart=/usr/bin/python3 ${SRCDIR}/service.py
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 ${SRCDIR}/service.py 
+StandardOutput=file:/tmp/wvservice.log
 User=${USER}
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
