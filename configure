@@ -46,9 +46,9 @@ plot:
 config:
 	python3 ${SRCDIR}/wavecfg.py
 pip:
-    pip3 install pyowm --user && \\
-    pip3 install pyyaml --user && \\
-    pip3 install numpy --user
+	pip3 install pyowm --user && \\
+	pip3 install pyyaml --user && \\
+	pip3 install numpy --user
 install:
 	sudo cp ${INSTALLDIR}/weathervolt.service /lib/systemd/system/ && \\
 	sudo chmod 644 /lib/systemd/system/weathervolt.service && \\
