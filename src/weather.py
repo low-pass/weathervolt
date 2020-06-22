@@ -1,7 +1,9 @@
 from pyowm import OWM
 from pyowm.utils import timestamps
+import os 
 
-with open('owm.key', 'r') as file:
+dir_path = os.path.dirname(os.path.realpath(__file__))
+with open(dir_path + '/../owm.key', 'r') as file:
     owm_key = file.read().replace('\n','')
 
 owm = OWM(owm_key)

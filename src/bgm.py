@@ -4,8 +4,10 @@ import numpy as np
 import scipy.io.wavfile
 import math
 import yaml
+import os 
 
-with open("wavecfg.yaml", 'r') as stream:
+dir_path = os.path.dirname(os.path.realpath(__file__))
+with open(dir_path + "/../wavecfg.yaml", 'r') as stream:
     wavecfg = yaml.safe_load(stream)
 fsamp = wavecfg['fsamp']
 fsine = wavecfg['fsine']
