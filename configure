@@ -1,19 +1,42 @@
 #!/usr/bin/env bash
 THISDIR=$( cd `dirname $0` && pwd )
 SRCDIR=${THISDIR}/src
+INSTALLDIR=${THISDIR}/install
+LOGFILE=/tmp/weathervolt.log
 
-if [ -f ${SRCDIR}/owm.key ] 
+if [ -f ${THISDIR}/owm.key ] 
 then :
 else 
     echo "Error: OWM key file doesn't exist. Check README on how to obtain one. Aborting.." && \
     exit 0
 fi
 
+mkdir -p ${INSTALLDIR}
+
+chmod +x ${INSTALLDIR}/pip3.userinstall.sh
+
+CURRENTFILE=${INSTALLDIR}/weathervolt.service
+echo "Generating ${CURRENTFILE}"
+cat << EOF > ${CURRENTFILE}
+[Unit]
+Description=Periocic OWM forecast fetch and generate parametric audio tone in background
+After=multi-user.target
+
+[Service]
+Type=idle
+Environment=HOME=/home/ikempi
+Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/1000/
+ExecStart=/usr/bin/python3 ${SRCDIR}/bgm.py > ${LOGFILE} 2>&1
+User=ikempi
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 CURRENTFILE=${THISDIR}/Makefile
-echo "Generating Makefile"
-
-cat << EOF > ${THISDIR}/Makefile
-
+echo "Generating ${CURRENTFILE}"
+cat << EOF > ${CURRENTFILE}
 .PHONY: run plot config install
 all: run plot 
 run:
@@ -22,8 +45,23 @@ plot:
 	python3 ${SRCDIR}/plot_wav.py
 config:
 	python3 ${SRCDIR}/wavecfg.py
+pip:
+    pip3 install pyowm --user && \\
+    pip3 install pyyaml --user && \\
+    pip3 install numpy --user
 install:
-	./pip3.userinstall.sh
+	sudo cp ${INSTALLDIR}/weathervolt.service /lib/systemd/system/ && \\
+	sudo chmod 644 /lib/systemd/system/weathervolt.service && \\
+	sudo systemctl daemon-reload && \\
+	sudo systemctl enable weathervolt.service
+uninstall:
+	sudo systemctl stop weathervolt.service && \\
+	sudo systemctl disable weathervolt.service && \\
+	sudo rm -f /lib/systemd/system/weathervolt.service && \\
+	sudo rm -f /usr/lib/systemd/system/weathervolt.service && \\
+	sudo rm -f /etc/systemd/system/weathervolt.service  && \\
+	sudo systemctl daemon-reload && \\
+	sudo systemctl reset-failed
 EOF
 
 exit 0

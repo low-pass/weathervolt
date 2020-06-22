@@ -1,3 +1,4 @@
 owm.key
 *.swp
 Makefile
+install/
