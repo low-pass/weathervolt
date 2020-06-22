@@ -2,3 +2,4 @@ owm.key
 *.swp
 Makefile
 install/
+src/__pycache__/
