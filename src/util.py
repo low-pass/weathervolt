@@ -9,6 +9,20 @@ import math
 import yaml
 import ntplib
 import os 
+import urllib.request
+
+def internet_on():
+    try:
+        urllib.request.urlopen('http://216.58.192.142',timeout=5)
+        return True
+    except urllib.error.URLError:
+        return False
+
+def flip_id(id_char):
+    if id_char == 'a':
+        return 'b'
+    else:
+        return 'a'
 
 def wav_output(highest,lowest,id_char):
     dir_path = os.path.dirname(os.path.realpath(__file__))
