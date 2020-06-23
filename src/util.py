@@ -3,11 +3,11 @@ from pyowm import OWM
 from pyowm.utils import timestamps
 from pyowm.weatherapi25.weather import Weather
 from datetime import datetime, timedelta
-from dateutil import tz
 import numpy as np
 import scipy.io.wavfile
 import math
 import yaml
+import ntplib
 import os 
 
 def wav_output(highest,lowest,id_char):
@@ -35,7 +35,7 @@ def wav_output(highest,lowest,id_char):
     mixer.music.play(-1)
     return
 
-def get_forecast():
+def get_forecast(timenow):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open(dir_path + '/../owm.key', 'r') as file:
         owm_key = file.read().replace('\n','')
@@ -46,13 +46,19 @@ def get_forecast():
     min10 = timedelta(minutes=10)
     temp_vec_max = []
     temp_vec_min = []
+    highest = 0
+    lowest = 0
     for i in range(len(fc.forecast.weathers)):
         ep = fc.forecast.get(i).to_dict()['reference_time']
         stamp = datetime.fromtimestamp(ep)-min10
-        if stamp.date() <= datetime.now().date() and stamp.hour >= 8:
+        if stamp.date() <= timenow.date() and stamp.hour >= 8:
             temp_vec_max.append(fc.forecast.get(i).temperature('celsius')['temp_max'])
             temp_vec_min.append(fc.forecast.get(i).temperature('celsius')['temp_min'])
-    highest = np.amax(np.array(temp_vec_max))
-    lowest = np.amin(np.array(temp_vec_min))
-    return highest, lowest
+    if not temp_vec_max:
+        status = 'owmfail'
+    else:
+        status = 'clear'
+        highest = np.amax(np.array(temp_vec_max))
+        lowest = np.amin(np.array(temp_vec_min))
+    return highest, lowest, status
 
