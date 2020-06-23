@@ -43,7 +43,7 @@ plot:
 config:
 	python3 ${SRCDIR}/wavecfg.py
 pip:
-	pip3 install pyowm pyyaml numpy datetime python-dateutil matplotlib scipy --user
+	pip3 install pyowm pyyaml numpy datetime matplotlib scipy ntplib --user
 install:
 	sudo cp ${INSTALLDIR}/weathervolt.service /lib/systemd/system/ && \\
 	sudo chmod 644 /lib/systemd/system/weathervolt.service && \\
