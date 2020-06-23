@@ -21,7 +21,14 @@ while True:
     else:
         inet_fail = False
         c = ntplib.NTPClient()
-        req = c.request('europe.pool.ntp.org', version=3)
+        try:
+            req = c.request('europe.pool.ntp.org', version=3)
+        except ntplib.NTPException:
+            print('NTP service unresponsive!')
+            wav_output(5,5,id_char)
+            id_char = flip_id(id_char)
+            time.sleep(60)
+            continue
         timenow = datetime.fromtimestamp(req.tx_time)
         highest, lowest, status = get_forecast(timenow)
         print('Time: ' + str(timenow) + ' OWM status: ' + status)
@@ -31,9 +38,10 @@ while True:
                 wavecfg = yaml.safe_load(stream)
             fullscale = wavecfg['fullsc']
             wav_output(fullscale/2,fullscale/2,id_char)
+            time.sleep(60)
         else:
             print('Highest temp: ' + str(highest) + ' Lowest temp: ' + str(lowest))
             wav_output(highest,lowest,id_char)
+            time.sleep(600)
         id_char = flip_id(id_char)
-        time.sleep(600)
 

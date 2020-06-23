@@ -50,18 +50,23 @@ def wav_output(highest,lowest,id_char):
     return
 
 def get_forecast(timenow):
+    highest = 0
+    lowest = 0
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open(dir_path + '/../owm.key', 'r') as file:
         owm_key = file.read().replace('\n','')
     owm = OWM(owm_key)
     mgr = owm.weather_manager()
     my_city_id = 660129 # Espoo, Finland
-    fc = mgr.forecast_at_id(my_city_id,'3h')
+    try:
+        fc = mgr.forecast_at_id(my_city_id,'3h')
+    except pyowm.exceptions.OWMError:
+        print('OWM service unresponsive!')
+        status = 'owmfail'
+        return highest, lowest, status
     min10 = timedelta(minutes=10)
     temp_vec_max = []
     temp_vec_min = []
-    highest = 0
-    lowest = 0
     for i in range(len(fc.forecast.weathers)):
         ep = fc.forecast.get(i).to_dict()['reference_time']
         stamp = datetime.fromtimestamp(ep)-min10
@@ -69,6 +74,7 @@ def get_forecast(timenow):
             temp_vec_max.append(fc.forecast.get(i).temperature('celsius')['temp_max'])
             temp_vec_min.append(fc.forecast.get(i).temperature('celsius')['temp_min'])
     if not temp_vec_max:
+        print('Out of compatible forecasts!')
         status = 'owmfail'
     else:
         status = 'clear'
