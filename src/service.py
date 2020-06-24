@@ -11,11 +11,16 @@ id_char = 'a'
 inet_fail = False
 
 while True:
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(dir_path + "/../wavecfg.yaml", 'r') as stream:
+        wavecfg = yaml.safe_load(stream)
+    fullscale = wavecfg['fullsc']
+
     if not internet_on():
         if not inet_fail:
             print('Internet is gone!')
             inet_fail = True
-            wav_output(2,2,id_char)
+            wav_output(fullscale/10,fullscale/10,id_char)
             id_char = flip_id(id_char)
         time.sleep(5)
     else:
@@ -23,9 +28,9 @@ while True:
         c = ntplib.NTPClient()
         try:
             req = c.request('europe.pool.ntp.org', version=3)
-        except ntplib.NTPException:
+        except:
             print('NTP service unresponsive!')
-            wav_output(5,5,id_char)
+            wav_output(fullscale/5,fullscale/5,id_char)
             id_char = flip_id(id_char)
             time.sleep(60)
             continue
@@ -33,10 +38,6 @@ while True:
         highest, lowest, status = get_forecast(timenow)
         print('Time: ' + str(timenow) + ' OWM status: ' + status)
         if status == 'owmfail':
-            dir_path = os.path.dirname(os.path.realpath(__file__))
-            with open(dir_path + "/../wavecfg.yaml", 'r') as stream:
-                wavecfg = yaml.safe_load(stream)
-            fullscale = wavecfg['fullsc']
             wav_output(fullscale/2,fullscale/2,id_char)
             time.sleep(60)
         else:
