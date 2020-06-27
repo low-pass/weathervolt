@@ -20,7 +20,7 @@ while True:
         if not inet_fail:
             print('Internet is gone!')
             inet_fail = True
-            wav_output(fullscale/10,fullscale/10,id_char)
+            wav_output(fullscale/10,fullscale/10,1,0,id_char)
             id_char = flip_id(id_char)
         time.sleep(5)
     else:
@@ -30,7 +30,7 @@ while True:
             req = c.request('europe.pool.ntp.org', version=3)
         except:
             print('NTP service unresponsive!')
-            wav_output(fullscale/5,fullscale/5,id_char)
+            wav_output(fullscale/5,fullscale/5,1,0,id_char)
             id_char = flip_id(id_char)
             time.sleep(60)
             continue
@@ -38,11 +38,20 @@ while True:
         highest, lowest, status = get_forecast(timenow)
         print('Time: ' + str(timenow) + ' OWM status: ' + status)
         if status == 'owmfail':
-            wav_output(fullscale/2,fullscale/2,id_char)
+            wav_output(fullscale/2,fullscale/2,1,0,id_char)
             time.sleep(60)
         else:
+            if status == 'clouds':
+                boost = 10
+                offset = 0
+            elif status == 'rain':
+                boost = 10
+                offset = 0.75
+            else:           # this is supposed to be status == 'clear'
+                boost = 1
+                offset = 0
             print('Highest temp: ' + str(highest) + ' Lowest temp: ' + str(lowest))
-            wav_output(highest,lowest,id_char)
+            wav_output(highest,lowest,boost,offset,id_char)
             time.sleep(600)
         id_char = flip_id(id_char)
 
