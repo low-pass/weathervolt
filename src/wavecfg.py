@@ -27,6 +27,16 @@ try:
     t_sec = int(t_sec)
 except ValueError:
     t_sec = 10
+try:
+    cloud_min = input("Enter minimum cloundness (percent) [default = 70]:")
+    cloud_min = int(cloud_min)
+except ValueError:
+    cloud_min = 70
+try:
+    rain_min = input("Enter minimum precipitation (mm per 3h) [default = 0.8]:")
+    rain_min = float(rain_min)
+except ValueError:
+    rain_min = 0.8
 
 filename = input("Enter wav file name (saved in /tmp/) [default = weathertone]:")
 if filename == '':
@@ -38,6 +48,8 @@ data = {
 't_sec': t_sec,
 'fmod' : fmod,
 'fullsc' : fullsc,
+'cloud_min' : cloud_min,
+'rain_min' : rain_min,
 'filename': str(filename)
 }
 

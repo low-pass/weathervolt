@@ -53,6 +53,10 @@ def get_forecast(timenow):
     highest = 0
     lowest = 0
     dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(dir_path + "/../wavecfg.yaml", 'r') as stream:
+        wavecfg = yaml.safe_load(stream)
+    cloud_min = wavecfg['cloud_min']
+    rain_min = wavecfg['rain_min']
     with open(dir_path + '/../owm.key', 'r') as file:
         owm_key = file.read().replace('\n','')
     owm = OWM(owm_key)
@@ -85,9 +89,9 @@ def get_forecast(timenow):
         status = 'clear' # default
         highest = np.amax(np.array(temp_vec_max))
         lowest = np.amin(np.array(temp_vec_min))
-        clouds_over = np.greater_equal(np.array(cloud_vec),70)
+        clouds_over = np.greater_equal(np.array(cloud_vec),cloud_min)
         clears_count = np.size(clouds_over) - np.count_nonzero(clouds_over)
-        rain_over = np.greater_equal(np.array(rain_vec),1)
+        rain_over = np.greater_equal(np.array(rain_vec),rain_min)
         rain_count = np.count_nonzero(rain_over)
         if clears_count == 0:
             status = 'clouds'

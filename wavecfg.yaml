@@ -1,6 +1,8 @@
+cloud_min: 70
 filename: weathertone
 fmod: 0.5
 fsamp: 44100
 fsine: 100
 fullsc: 30
+rain_min: 0.8
 t_sec: 10
