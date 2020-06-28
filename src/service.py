@@ -41,12 +41,12 @@ while True:
             wav_output(fullscale/2,fullscale/2,1,0,id_char)
             time.sleep(60)
         else:
-            if status == 'clouds':
-                boost = 10
-                offset = 0
-            elif status == 'rain':
+            if status == 'rain':
                 boost = 10
                 offset = 0.75
+            elif status == 'clouds':
+                boost = 10
+                offset = 0
             else:           # this is supposed to be status == 'clear'
                 boost = 1
                 offset = 0
