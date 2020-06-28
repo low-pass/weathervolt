@@ -24,7 +24,7 @@ def flip_id(id_char):
     else:
         return 'a'
 
-def wav_output(highest,lowest,id_char):
+def wav_output(highest,lowest,boost,offs,id_char):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open(dir_path + "/../wavecfg.yaml", 'r') as stream:
         wavecfg = yaml.safe_load(stream)
@@ -37,10 +37,15 @@ def wav_output(highest,lowest,id_char):
     t = np.linspace(0.,t_sec,fsamp*t_sec)
     vol = (highest-lowest)/2+lowest
     mod_ampl = (highest-lowest)/vol/2
-    amp = np.iinfo(np.int16).max
+    print(mod_ampl)
     carrier = vol*np.sin(2.*np.pi*fsine*t)/fullscale
-    mod = mod_ampl*np.sin(2.*np.pi*fmod*t)+1
-    data = np.clip(np.multiply(carrier,mod),a_min=-1,a_max=1)
+    mod = mod_ampl*np.sin(2.*np.pi*fmod*t)
+    top = np.max(mod)
+    bot = np.min(mod)
+    mod = np.clip((mod*boost+offs*mod_ampl*boost),a_min=bot,a_max=top)+1
+    data = np.multiply(carrier,mod)
+    data = np.clip(data,a_min=-1,a_max=1)
+    amp = np.iinfo(np.int16).max
     data = np.floor(data*amp)
     data = np.asarray(data, dtype=np.int16)
     scipy.io.wavfile.write('/tmp/' + filename + id_char + '.wav',fsamp,data)

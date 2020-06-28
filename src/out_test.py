@@ -17,9 +17,9 @@ if status == 'owmfail':
     with open(dir_path + "/../wavecfg.yaml", 'r') as stream:
         wavecfg = yaml.safe_load(stream)
     fullscale = wavecfg['fullsc']
-    wav_output(fullscale/2,fullscale/2,'a')
+    wav_output(fullscale/2,fullscale/2,10,0.8,'a')
 else:
     print('Highest temp: ' + str(highest) + ' Lowest temp: ' + str(lowest))
-    wav_output(highest,lowest,'a')
+    wav_output(highest,lowest,10,0.8,'a')
     time.sleep(10)
     print('Test done. Did it work?')
