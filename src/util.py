@@ -67,18 +67,31 @@ def get_forecast(timenow):
     min10 = timedelta(minutes=10)
     temp_vec_max = []
     temp_vec_min = []
+    cloud_vec = []
+    rain_vec = []
     for i in range(len(fc.forecast.weathers)):
         ep = fc.forecast.get(i).to_dict()['reference_time']
         stamp = datetime.fromtimestamp(ep)-min10
         if stamp.date() <= timenow.date() and stamp.hour >= 8:
             temp_vec_max.append(fc.forecast.get(i).temperature('celsius')['temp_max'])
             temp_vec_min.append(fc.forecast.get(i).temperature('celsius')['temp_min'])
+            cloud_vec.append(fc.forecast.get(i).to_dict()['clouds'])
+            if fc.forecast.get(i).to_dict()['rain']:
+                rain_vec.append(fc.forecast.get(i).to_dict()['rain']['3h'])
     if not temp_vec_max:
         print('Out of compatible forecasts!')
         status = 'owmfail'
     else:
-        status = 'clear'
+        status = 'clear' # default
         highest = np.amax(np.array(temp_vec_max))
         lowest = np.amin(np.array(temp_vec_min))
+        clouds_over = np.greater_equal(np.array(cloud_vec),70)
+        clears_count = np.size(clouds_over) - np.count_nonzero(clouds_over)
+        rain_over = np.greater_equal(np.array(rain_vec),1)
+        rain_count = np.count_nonzero(rain_over)
+        if clears_count == 0:
+            status = 'clouds'
+        if rain_count >= 1: 
+            status = 'rain'
     return highest, lowest, status
 
